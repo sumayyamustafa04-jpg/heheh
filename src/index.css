@@ -1,0 +1,153 @@
+@import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@400,500,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #edeae2;
+  --color-cream-2: #e3ded2;
+  --color-ink: #16140f;
+  --color-ink-2: #221f18;
+  --color-accent: #ff4d00;
+  --color-muted: #8a857a;
+
+  --font-display: "Clash Display", "Archivo", sans-serif;
+  --font-sans: "Satoshi", "Inter", sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-cream);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink);
+}
+
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
+/* ---------- utilities ---------- */
+
+.text-stroke-ink {
+  -webkit-text-stroke: 1px var(--color-ink);
+  color: transparent;
+}
+.text-stroke-cream {
+  -webkit-text-stroke: 1px rgba(237, 234, 226, 0.85);
+  color: transparent;
+}
+
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -100%;
+  z-index: 200;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  animation: grain-shift 0.9s steps(4) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 3%); }
+  50% { transform: translate(3%, -2%); }
+  75% { transform: translate(-3%, -3%); }
+  100% { transform: translate(2%, 2%); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 14s linear infinite;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+.animate-float-y {
+  animation: float-y 1.8s ease-in-out infinite;
+}
+
+.ease-expo {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------- theme system (day / night) ---------- */
+
+:root {
+  color-scheme: light;
+}
+
+/* Dark mode: swap the central palette tokens. Every existing utility
+   (bg-cream, text-ink, border-ink/15, bg-ink/[0.03] …) follows the
+   variables, so the whole site flips consistently from one place. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-cream: #12100c;
+  --color-cream-2: #1b1913;
+  --color-ink: #edeae2;
+  --color-ink-2: #e0dbd0;
+}
+
+/* Contexts that must keep the original palette in both modes:
+   the always-dark bands (About, Footer, menu, preloader), the
+   blend-inverted navbar & cursor, and media frames behind videos. */
+html[data-theme="dark"] .theme-pin {
+  --color-cream: #edeae2;
+  --color-cream-2: #e3ded2;
+  --color-ink: #16140f;
+  --color-ink-2: #221f18;
+}
+
+/* Short one-shot sweep while toggling — class is removed after ~450ms */
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+  transition-property: background-color, border-color, color, fill, stroke,
+    outline-color, caret-color;
+  transition-duration: 0.35s;
+  transition-timing-function: ease;
+}
